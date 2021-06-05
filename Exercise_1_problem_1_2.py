@@ -11,6 +11,25 @@
 
 from shapely.geometry import Point, LineString, Polygon
 #YOUR CODE HERE 1 to define create_point_geom()
+# Define create_point_geom() function which returns the point of the arguments
+def create_point_geom(x_coord, y_coord):
+  """
+  Function to return the point.
+
+  Parameters
+  ----------
+  x_coord : <numerical>
+    x coordinate.
+
+  y_coord : <numerical>
+    y coordinate.
+
+  Returns
+  -------
+  <Point>
+    The point.
+  """
+  return Point(x_coord, y_coord)
 
 # Test your function by running these code cells:
 
@@ -27,12 +46,42 @@ print(point1.geom_type)
 # 
 
 # YOUR CODE HERE 2 to define create_line_geom()
+def create_line_geom(points):
+  """
+  Function for checking the input type and taking a list of Shapely Point objects as parameter.
+
+  Parameters
+  ----------
+  points: <list>
+    A list of Shapely Point objects.
+
+  Returns
+  -------
+  <LineString>
+    The LineString with points.
+  """
+  # Assert whether the 'points' type is list
+  assert type(points) == list, "Input should be a list!"
+  # Assert whether the length of points is equal to or more than two
+  assert len(points) >= 2, "LineString object requires at least two Points!"
+  
+  # For each element, check whether the points type is correct
+  for i in range(len(points)):
+    assert type(points[i]) == Point, "All list values should be Shapely Point objects!"
+  
+  # Return the LineString
+  return LineString(points)
 
 # Demonstrate the usage of your function; For example, create a line object with two points: `Point(45.2, 22.34)` & `Point(100.22, -3.20)` and store the result in a variable called `line1`:
 
 line1 = None
 # YOUR CODE HERE 3 to define two points and store the result in line1
+# Create two points
+point1 = Point(45.2, 22.34)
+point2 = Point(100.22, -3.20)
 
+# Store the points to line1 by uisng the function
+line1 = create_line_geom([point1, point2])
 
 # CODE FOR TESTING YOUR SOLUTION
 print(line1)
@@ -63,11 +112,36 @@ except Exception as e:
 
 
 # YOUR CODE HERE 4 to define create_poly_geom()
+def create_poly_geom(coords):
+  """
+  Function to check the input type, and create and return a Polygon object based on the coordinates.
+
+  Parameters
+  ----------
+  coords: <list>
+    The coordinates.
+
+  Returns
+  -------
+  <Polygon>
+    The Polygon object based on coordinates.
+  """
+  # Assert the coords type
+  assert type(coords) == list, "Input should be a list!"
+  # Assert the length of coords
+  assert len(coords) >= 3, "Polygon object requires at least three Points!"
+  # For each element, assert whether the type is correct
+  for i in range(len(coords)):
+    assert type(coords[i]) == tuple, "All list values should be coordinate tuples!"
+
+  # Return the polygon of coords
+  return Polygon(coords)
 
 # Demonstrate the usage of the function. For example, create a Polygon with three points: `(45.2, 22.34)`, `(100.22, -3.20)` & `(70.0, 10.20)`.
 
 # YOUR CODE HERE 5 to define poly1 with three points
-poly1 = 
+# Create a polygon with three given points
+poly1 = create_poly_geom([(45.2, 22.34), (100.22, -3.20), (70.0, 10.20)])
 
 # CODE FOR TESTING YOUR SOLUTION
 print(poly1)
@@ -98,16 +172,36 @@ except Exception as e:
 # 
 
 #  YOUR CODE HERE 6 to define get_centroid()
+def get_centroid(geom):
+  """
+  Function for checking the input type and creating a centroid of the input geometry.
+
+  Parameters
+  ----------
+  geom: <Point, LineString, or Polygon>
+    A geometry.
+
+  Returns
+  -------
+  <Point>
+    The centroid of geom.
+  """
+  # Assert whether the geom type is shapely geometry
+  assert type(geom) == Point or type(geom) == LineString or type(geom) == Polygon, "Input should be a Shapely geometry!"
+  # Return the centroid
+  return geom.centroid
 
 # Test and demonstrate the usage of the function. You can, for example, create shapely objects using the functions you created in problem 1 and print out information about their centroids:
 # 
 
 #  YOUR CODE HERE 7 to define some objects
-
+# Create a polygon with three given points
+poly1 = create_poly_geom([(45.2, 22.34), (100.22, -3.20), (70.0, 10.20)])
 
 # CODE FOR TESTING YOUR SOLUTION
 centroid = get_centroid(poly1)
 print(centroid)
+###print("centroid type: ", centroid.geom_type)
 
 # Check that the assertion error works correctly:
 # CODE CELL FOR TESTING YOUR SOLUTION
@@ -125,6 +219,22 @@ except Exception as e:
 #    - Inside the function, you should first check with `assert` -functionality that the input is a Shapely Polygon geometry (see [lesson 6](https://geo-python.github.io/site/lessons/L6/interpreting-errors.html#assertions) and [hints](https://automating-gis-processes.github.io/site/develop/lessons/L1/exercise-1.html#hints)). If something else than a list is passed for the function, you should return an Error message: `"Input should be a Shapely Polygon -object!"`
 
 # YOUR CODE HERE 8 to define get_area()
+def get_area(polygon):
+  """
+  Function to check the input type and return the length of the line (if input is LineString) and length of the exterior ring (if input is Polygon). 
+
+  Parameters
+  ----------
+  polygon: <Polygon>
+    The Polygon.
+
+  Returns
+  -------
+  <float>
+    The area of the polygon.
+  """
+  assert type(polygon) == Polygon, "Input should be a Shapely Polygon -object!"
+  return polygon.area
 
 # Test and demonstrate the usage of the function:
 get_area(poly1)
@@ -150,6 +260,23 @@ except Exception as e:
 
 
 #  YOUR CODE HERE 9 to define get_length()
+def get_length(geom):
+  """
+  Function to check the input type and return the length of the line (if input is LineString) and length of the exterior ring (if input is Polygon).
+
+  Parameters
+  ----------
+  geom: <LineString or Polygon>
+    The LineString or Polygon.
+
+  Returns
+  -------
+  <float>
+    The length of the polygon.
+  """
+  # Assert the geom type
+  assert type(geom) == LineString or type(geom) == Polygon, "'geom' should be either LineString or Polygon!"
+  return geom.length
 
 # Test and demonstrate the usage of the function:
 
